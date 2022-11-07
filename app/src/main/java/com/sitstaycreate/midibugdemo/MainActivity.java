@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "No devices available");
         } else {
             // Get the info for the first available device (for simplicity in this example)
-            MidiDeviceInfo midiDeviceInfo = devicesInfo[0];
+            MidiDeviceInfo midiDeviceInfo = devicesInfo[1];
             // openDevice method - here's where the problems start
             m.openDevice(midiDeviceInfo, new MidiManager.OnDeviceOpenedListener() {
                 @Override
@@ -61,17 +61,19 @@ public class MainActivity extends AppCompatActivity {
                         // It also seems reasonable to open a port on the device here
                         // and assign a reference to it
                         // Arbitrarily using portNumber 1 - I have also tried this with 0
-                        openPort = device.openOutputPort(1);
-                        // open port is always null in every case I try
+                        openPort = device.openOutputPort(0);
+                        // Port is opening
                         if (openPort == null) {
                             Log.e(TAG,
                                     "could not open output port for " + midiDeviceInfo);
+                            mMidiDisplay.setText("Could not open port");
                             return;
                         }
                         // Connect the open port to the custom receiver
                         // I have also tried this outside of the onDeviceOpened() method
                         openPort.connect(midiReceiverDisplay);
                         // I am using Max 7 to test, the device shows in the program
+                        // But sending a message causes the app to crash
                         // The documentation does not show a working program for either
                         // receiving or sending midi and so therefore has a "documentation bug"
                         // I have worked with the Javax midi library before, so this shouldn't
